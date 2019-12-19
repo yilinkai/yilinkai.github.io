@@ -6,12 +6,12 @@
   <meta name="author" content="yilinkai">
   
   
-  <title>my-first-blog | woshimolei&#39;s blog</title>
+  <title>zoj-4114 | woshimolei&#39;s blog</title>
 
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
   
-    <meta name="keywords" content="算法,算法,博弈,">
+    <meta name="keywords" content="DP,">
   
 
   
@@ -164,12 +164,8 @@
   <div class="passage">
   <div class="passage-meta">
     <span>
-      <i class="fa fa-calendar"></i>2019-03-31
+      <i class="fa fa-calendar"></i>2019-05-17
     </span>
-    
-      <span>
-        | <a href="/categories/算法/"><i class="fa fa-bookmark"></i>算法</a>
-      </span>
     
     
       <span>
@@ -178,11 +174,11 @@
     
   </div>
   <h1 class="passage-title">
-    my-first-blog
+    zoj-4114
   </h1>
   
   <article class="passage-article">
-    <p>哈哈哈哈哈哈成功啦</p>
+    <p>简单DP，给一个原始的01串string_a，要你变成目标的01串string_b，你有K次操作，每次你必须选择字符串M位进行翻转<br>问有多少种情况，使得最后string_a翻转成string_b<br>我们可以很清楚的知道，string_a和string_b在某一位是相同的，那么这个位置应该在最后被翻转偶数次，否则不相同是奇数次。<br>DP[i][j]代表翻了i轮后，需要翻奇数次的位置还有j个。那么很容易写出转移方程<br>DP[i][j-z+(m-z)]=dp[i][j]<em>C[j][z]</em>C[n-j][m-z]<br>这个其实很好理解。<br>j-z代表选择了z个需要翻奇数次的位置，那么m-z个位置需要翻偶数次。<br>C[j][z]代表从j个相同的位置(翻转偶数次的位置)，那么C[n-j][m-z]代表从n-j个相同的位置，选择m-z相同的位置进行翻转，会新增加(m-z)个奇数（不相同）的位置<br>最后DO[k][0]便是答案<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;algorithm&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> LL long long</span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line">LL dp[<span class="number">105</span>][<span class="number">104</span>];</span><br><span class="line"><span class="keyword">char</span> a[<span class="number">105</span>];</span><br><span class="line"><span class="keyword">char</span> b[<span class="number">105</span>];</span><br><span class="line">LL C[<span class="number">105</span>][<span class="number">105</span>];</span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> MOD = <span class="number">998244353</span>;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">init</span><span class="params">()</span></span>&#123;</span><br><span class="line">   <span class="built_in">memset</span>(C,<span class="number">0</span>,<span class="keyword">sizeof</span>(C));</span><br><span class="line">   C[<span class="number">0</span>][<span class="number">0</span>]=<span class="number">1</span>;</span><br><span class="line">   <span class="keyword">for</span> (<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;=<span class="number">102</span>;i++)&#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> j=<span class="number">0</span>;j&lt;=i;j++)&#123;</span><br><span class="line">            C[i][j]=(C[i<span class="number">-1</span>][j<span class="number">-1</span>]+C[i<span class="number">-1</span>][j])%MOD;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">  <span class="keyword">int</span> t;</span><br><span class="line">  <span class="keyword">int</span> n,k,m;</span><br><span class="line">  <span class="built_in">scanf</span>(<span class="string">"%d"</span>,&amp;t);</span><br><span class="line">  init();</span><br><span class="line">  <span class="keyword">while</span>(t--)&#123;</span><br><span class="line">    <span class="built_in">scanf</span>(<span class="string">"%d%d%d"</span>,&amp;n,&amp;k,&amp;m);</span><br><span class="line">    <span class="built_in">scanf</span>(<span class="string">"%s%s"</span>,a+<span class="number">1</span>,b+<span class="number">1</span>);</span><br><span class="line">    <span class="built_in">memset</span>(dp,<span class="number">0</span>,<span class="keyword">sizeof</span>(dp));</span><br><span class="line">    <span class="keyword">int</span> cnt=<span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;=n;i++)&#123;</span><br><span class="line">        <span class="keyword">if</span> (a[i]!=b[i])&#123;</span><br><span class="line">            cnt++;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    dp[<span class="number">0</span>][cnt]=<span class="number">1</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;=k;i++)&#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> j=<span class="number">0</span>;j&lt;=n;j++)&#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> z=<span class="number">0</span>;z&lt;=j;z++)&#123;<span class="comment">//z为改变的值，不应该大于M，这里不能去z&lt;=j，j-z这个值可能回大于M,造成错误</span></span><br><span class="line">                <span class="keyword">if</span> (n-j-m+z&gt;=<span class="number">0</span>)</span><br><span class="line">                dp[i][j-z+(m-z)]+=dp[i<span class="number">-1</span>][j]*C[j][z]%MOD*C[n-j][m-z]%MOD;</span><br><span class="line">                 dp[i][j-z+(m-z)]%=MOD;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"%lld\n"</span>,dp[k][<span class="number">0</span>]%MOD);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 
   </article>
   <aside class="table-content" id="site-toc">
@@ -200,7 +196,7 @@
       
         <div>
           原文链接: 
-          <a href target="_blank">http://yoursite.com/2019/03/31/my-first-blog/</a>
+          <a href target="_blank">http://yoursite.com/2019/05/17/zoj-4114/</a>
         </div>
       
       <div>
@@ -211,9 +207,7 @@
   
     <div class="passage-tags">
      
-      <a href="/tags/算法/"><i class="fa fa-tags"></i>算法</a>
-     
-      <a href="/tags/博弈/"><i class="fa fa-tags"></i>博弈</a>
+      <a href="/tags/DP/"><i class="fa fa-tags"></i>DP</a>
     
     </div>
   
@@ -330,10 +324,10 @@
 
 <div class="bottom-bar">
   <div class="bottom-bar-left">
-    <a href="/2019/04/04/cf-550-div3/" data-enable="true">
+    <a href="javascript:void(0);" data-enable="false">
       <i class="fa fa-arrow-left"></i>
     </a>
-    <a href="/2019/03/31/hello-world/" data-enable="true">
+    <a href="/2019/04/24/Tree-chain-partition/" data-enable="true">
       <i class="fa fa-arrow-right"></i>
     </a>
   </div>

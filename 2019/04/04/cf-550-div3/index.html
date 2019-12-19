@@ -6,12 +6,12 @@
   <meta name="author" content="yilinkai">
   
   
-  <title>my-first-blog | woshimolei&#39;s blog</title>
+  <title>cf 550 div3 Graph Without Long Directed Paths | woshimolei&#39;s blog</title>
 
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
   
-    <meta name="keywords" content="算法,算法,博弈,">
+    <meta name="keywords" content="树上染色,二分匹配,">
   
 
   
@@ -164,11 +164,11 @@
   <div class="passage">
   <div class="passage-meta">
     <span>
-      <i class="fa fa-calendar"></i>2019-03-31
+      <i class="fa fa-calendar"></i>2019-04-04
     </span>
     
       <span>
-        | <a href="/categories/算法/"><i class="fa fa-bookmark"></i>算法</a>
+        | <a href="/categories/树上染色/"><i class="fa fa-bookmark"></i>树上染色</a>
       </span>
     
     
@@ -178,11 +178,11 @@
     
   </div>
   <h1 class="passage-title">
-    my-first-blog
+    cf 550 div3 Graph Without Long Directed Paths
   </h1>
   
   <article class="passage-article">
-    <p>哈哈哈哈哈哈成功啦</p>
+    <p><a href="https://codeforces.com/contest/1144/problem/F" target="_blank" rel="noopener">https://codeforces.com/contest/1144/problem/F</a><br>这个题目的意思开始我并没有理解，什么叫已经走过的路径次数。后面仔细一想，的确是这样的。<br>已经走过的路径次数不能超过1，代表从每个点出发，最多只能往下走一个节点。<br>那么其实这就是一个比较裸的染色问题。<br>把这个点开始的下一个节点染成不同颜色（就两张颜色）<br>那么如果其中碰到相同颜色的节点，代表无法染色，也就是说没法染成新的颜色，那么也就是说，肯定会有路径次数大于1的出现<br>最后把条边指向单一颜色即可。<br>我还没想到怎么用二分图匹配写。。。先填坑<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;algorithm&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;vector&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> maxx = <span class="number">2e5</span>+<span class="number">7</span>;</span><br><span class="line"><span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;G[maxx];</span><br><span class="line"><span class="keyword">int</span> x[maxx],y[maxx],col[maxx];</span><br><span class="line"><span class="keyword">int</span> flag;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">dfs</span><span class="params">(<span class="keyword">int</span> x,<span class="keyword">int</span> pre,<span class="keyword">int</span> val)</span></span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;G[x].size();i++)&#123;</span><br><span class="line">        <span class="keyword">int</span> now=G[x][i];</span><br><span class="line">        <span class="keyword">if</span>(pre==now)<span class="keyword">continue</span>;</span><br><span class="line">        <span class="keyword">if</span> (col[now]==<span class="number">-1</span>)&#123;</span><br><span class="line">            col[now]=val;</span><br><span class="line">            dfs(now,x,val^<span class="number">1</span>);</span><br><span class="line">        &#125;<span class="keyword">else</span> <span class="keyword">if</span> (col[now]==col[x])&#123;</span><br><span class="line">            flag=<span class="number">1</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">   <span class="keyword">int</span> n,m;</span><br><span class="line">   <span class="keyword">while</span>(~<span class="built_in">scanf</span>(<span class="string">"%d%d"</span>,&amp;n,&amp;m))&#123;</span><br><span class="line">      flag=<span class="number">0</span>;</span><br><span class="line">      <span class="built_in">memset</span>(col,<span class="number">-1</span>,<span class="keyword">sizeof</span>(col));</span><br><span class="line">      <span class="keyword">for</span> (<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;=m;i++)&#123;</span><br><span class="line">          <span class="built_in">scanf</span>(<span class="string">"%d%d"</span>,&amp;x[i],&amp;y[i]);</span><br><span class="line">          G[x[i]].push_back(y[i]);</span><br><span class="line">          G[y[i]].push_back(x[i]);</span><br><span class="line">      &#125;</span><br><span class="line">      col[<span class="number">1</span>]=<span class="number">1</span>;</span><br><span class="line">      dfs(<span class="number">1</span>,<span class="number">-1</span>,<span class="number">0</span>);</span><br><span class="line">      <span class="keyword">if</span> (flag)<span class="built_in">printf</span>(<span class="string">"NO\n"</span>);</span><br><span class="line">      <span class="keyword">else</span> &#123;</span><br><span class="line">         <span class="built_in">printf</span>(<span class="string">"YES\n"</span>);</span><br><span class="line">         <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;=m;i++)&#123;</span><br><span class="line">            <span class="keyword">if</span> (col[x[i]]==<span class="number">1</span>)<span class="built_in">printf</span>(<span class="string">"1"</span>);</span><br><span class="line">            <span class="keyword">else</span> <span class="built_in">printf</span>(<span class="string">"0"</span>);</span><br><span class="line">         &#125;</span><br><span class="line">         <span class="built_in">printf</span>(<span class="string">"\n"</span>);</span><br><span class="line">      &#125;</span><br><span class="line">   &#125;</span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 
   </article>
   <aside class="table-content" id="site-toc">
@@ -200,7 +200,7 @@
       
         <div>
           原文链接: 
-          <a href target="_blank">http://yoursite.com/2019/03/31/my-first-blog/</a>
+          <a href target="_blank">http://yoursite.com/2019/04/04/cf-550-div3/</a>
         </div>
       
       <div>
@@ -211,9 +211,7 @@
   
     <div class="passage-tags">
      
-      <a href="/tags/算法/"><i class="fa fa-tags"></i>算法</a>
-     
-      <a href="/tags/博弈/"><i class="fa fa-tags"></i>博弈</a>
+      <a href="/tags/二分匹配/"><i class="fa fa-tags"></i>二分匹配</a>
     
     </div>
   
@@ -330,10 +328,10 @@
 
 <div class="bottom-bar">
   <div class="bottom-bar-left">
-    <a href="/2019/04/04/cf-550-div3/" data-enable="true">
+    <a href="/2019/04/04/t/" data-enable="true">
       <i class="fa fa-arrow-left"></i>
     </a>
-    <a href="/2019/03/31/hello-world/" data-enable="true">
+    <a href="/2019/03/31/my-first-blog/" data-enable="true">
       <i class="fa fa-arrow-right"></i>
     </a>
   </div>
